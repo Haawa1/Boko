@@ -1,1 +1,748 @@
-Thank you for using TrebEdit.
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boko Games</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap");
+
+        :root {
+            --primary-color: #e52e71;
+            --secondary-color: #ff8a00;
+            --background-color: #f0f2f5;
+            --surface-color: #ffffff;
+            --text-color: #333;
+            --success-color: #28a745;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Cairo", sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        .main-header {
+            background-color: var(--surface-color);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .menu-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .header-logo {
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        /* --- Image Banner Slider --- */
+        .banner-container {
+            padding: 15px;
+            padding-top: 10px;
+        }
+        .banner-slider {
+            width: 100%;
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+            border-radius: 15px; /* حواف دائرية للبانر */
+            box-shadow: var(--shadow);
+        }
+
+        /* --- Sidebar (Navigation Drawer) --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            height: 100%;
+            background-color: var(--surface-color);
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.is-open {
+            right: 0;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .profile-email {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .copy-icon {
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+        
+        #walletBalance {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 15px;
+            color: var(--secondary-color);
+        }
+        #walletBalance .fa-coins {
+            margin-left: 8px;
+            color: #ffc107;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wallet-box {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .wallet-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: "Cairo", sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        #deposit-btn {
+            background: linear-gradient(45deg, var(--success-color), #20c997);
+            color: white;
+        }
+
+        #withdraw-btn {
+            background-color: #e9ecef;
+            color: #343a40;
+        }
+        
+        #admin-btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+        
+        .logout-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-top: auto;
+            font-family: "Cairo", sans-serif;
+            font-size: 1rem;
+        }
+
+
+        /* --- Main Content & Footer --- */
+        .page-content { padding: 0 20px 20px 20px; }
+        .game-card {
+            background-color: var(--surface-color);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .game-icon img { width: 70px; height: 70px; border-radius: 12px; }
+        .game-info { flex-grow: 1; font-weight: 700; font-size: 1.2rem; }
+        .play-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white; padding: 10px 30px; border-radius: 25px;
+            text-decoration: none; font-weight: 700;
+            box-shadow: 0 4px 10px rgba(229, 46, 113, 0.4);
+        }
+        
+        .main-footer {
+            padding: 20px;
+            text-align: center;
+            background: var(--surface-color);
+            margin-top: 20px;
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .social-link .fab { font-size: 1.5rem; }
+
+
+        /* --- Overlay & Modals --- */
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%;
+            height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;
+        }
+        .overlay.is-visible { display: block; }
+        
+        .modal {
+            position: fixed; z-index: 2000; left: 0; top: 0; width: 100%;
+            height: 100%; background-color: rgba(0,0,0,0.6); display: flex;
+            align-items: center; justify-content: center; opacity: 0;
+            visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal.is-visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 15px;
+            text-align: center; width: 90%; max-width: 400px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 { font-size: 1.5rem; margin-bottom: 20px; }
+        .modal-input, .modal-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: "Cairo", sans-serif;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .modal-btn {
+            padding: 12px; border-radius: 8px; border: none; font-size: 1rem;
+            font-weight: 700; cursor: pointer; text-decoration: none;
+            width: 100%; margin-top: 5px;
+        }
+        .modal-btn-primary { background: var(--primary-color); color: white; }
+        .modal-btn-secondary { background-color: #6c757d; color: white; }
+        .info-box {
+            background-color: #e9ecef; padding: 10px; border-radius: 8px;
+            font-weight: 700; font-size: 1rem; margin-bottom: 20px;
+        }
+
+        /* --- Auth Screen --- */
+        .auth-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--background-color); display: flex; align-items: center;
+            justify-content: center; z-index: 3000; padding: 20px;
+        }
+        .auth-box {
+            background: var(--surface-color); border-radius: 20px; padding: 30px;
+            box-shadow: var(--shadow); max-width: 400px; width: 100%; text-align: center;
+        }
+        .auth-title { font-size: 2rem; font-weight: 900; margin-bottom: 30px; }
+        .auth-form { display: flex; flex-direction: column; gap: 15px; }
+        .auth-input { padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: "Cairo", sans-serif; }
+        .auth-btn { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+        .auth-toggle { margin-top: 20px; color: #666; }
+        .auth-toggle a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        .auth-message { color: #dc3545; font-size: 0.9rem; margin-top: 10px; min-height: 1.2em; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="appContainer" class="hidden">
+        <header class="main-header">
+            <i class="fas fa-bars menu-btn" id="menuBtn"></i>
+            <div class="header-logo">Boko</div>
+            <div style="width: 24px;"></div> 
+        </header>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-times sidebar-close-btn" id="sidebarCloseBtn"></i>
+                <div class="profile-avatar">🍓</div>
+                <div class="profile-email">
+                    <span id="userEmailDisplay">email@example.com</span>
+                    <i class="fas fa-copy copy-icon" id="copyEmailBtn"></i>
+                </div>
+                <p id="walletBalance"><i class="fas fa-coins"></i> <span>0</span></p>
+            </div>
+            <div class="sidebar-content">
+                 <div class="wallet-box">
+                    <button id="deposit-btn" class="wallet-btn"><i class="fas fa-plus"></i> شحن الرصيد</button>
+                    <button id="withdraw-btn" class="wallet-btn"><i class="fas fa-hand-holding-dollar"></i> سحب الأرباح</button>
+                    <button id="admin-btn" class="wallet-btn hidden"><i class="fas fa-user-shield"></i> لوحة التحكم</button>
+                 </div>
+                 <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+            </div>
+        </aside>
+        
+        <div class="overlay" id="overlay"></div>
+
+        <main>
+            <div class="banner-container">
+                <div class="banner-slider" id="bannerSlider"></div>
+            </div>
+            
+            <div class="page-content">
+                <div class="game-card">
+                    <div class="game-icon">
+                        <img src="https://i.postimg.cc/vZgbNJ6j/Photoroom.png" alt="Farm Game">
+                    </div>
+                    <div class="game-info">Farm</div>
+                    <a href="Mahmoud.html" class="play-btn">لعب</a>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="main-footer">
+            <a href="https://wa.me/201501860702" target="_blank" class="social-link">
+                <i class="fab fa-whatsapp"></i>
+                <span>تواصل معنا</span>
+            </a>
+        </footer>
+    </div>
+
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box">
+            <h2 class="auth-title" id="authTitle">تسجيل الدخول</h2>
+            <form class="auth-form" id="authForm">
+                <input type="email" class="auth-input" id="emailInput" placeholder="البريد الإلكتروني" required>
+                <input type="password" class="auth-input" id="passwordInput" placeholder="كلمة المرور" required>
+                <button type="submit" class="auth-btn" id="authButton">تسجيل الدخول</button>
+            </form>
+            <p class="auth-toggle" id="authToggle">
+                ليس لديك حساب؟ <a href="#" id="toggleAuthMode">إنشاء حساب</a>
+            </p>
+            <div class="auth-message" id="authMessage"></div>
+        </div>
+    </div>
+    
+    <div class="modal" id="withdrawModal">
+        <div class="modal-content">
+            <h3>سحب الأرباح</h3>
+            <div class="info-box">رصيدك الحالي: <span id="withdrawModalBalance">0</span> عملة</div>
+            <form id="withdrawForm">
+                <input type="number" id="withdrawAmount" class="modal-input" placeholder="الكمية المراد سحبها" required>
+                <select id="withdrawMethod" class="modal-select">
+                    <option value="" disabled selected>اختر طريقة السحب</option>
+                    <option value="vodafone">فودافون كاش</option>
+                    <option value="paypal">باي بال (PayPal)</option>
+                </select>
+                <input type="text" id="vodafoneInput" class="modal-input hidden" placeholder="أدخل رقم فودافون كاش" required>
+                <input type="email" id="paypalInput" class="modal-input hidden" placeholder="أدخل بريدك الإلكتروني في باي بال" required>
+                <button type="submit" class="modal-btn modal-btn-primary">إرسال طلب السحب</button>
+            </form>
+            <button class="modal-btn modal-btn-secondary" id="closeWithdrawModalBtn">إغلاق</button>
+        </div>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-user-shield"></i> لوحة تحكم الوكيل</h3>
+            <p>أداة لإرسال طلبات شحن الرصيد للمستخدمين.</p>
+            <form id="adminForm">
+                <input type="email" id="adminTargetEmail" class="modal-input" placeholder="البريد الإلكتروني للمستخدم" required>
+                <input type="number" id="adminAmount" class="modal-input" placeholder="كمية العملات للشحن" required>
+                <button type="submit" class="modal-btn modal-btn-primary">إرسال طلب شحن</button>
+            </form>
+            <button class="modal-btn modal-btn-secondary" id="closeAdminModalBtn">إغلاق</button>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // Firebase configuration (Keep your original config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDs-NPuHrga2A-4dICNYkySLVnm3awHn9A",
+            authDomain: "bright-2004b.firebaseapp.com",
+            databaseURL: "https://bright-2004b-default-rtdb.firebaseio.com",
+            projectId: "bright-2004b",
+            storageBucket: "bright-2004b.firebasestorage.app",
+            messagingSenderId: "341104123105",
+            appId: "1:341104123105:web:83ba2d3d0e409a821e6ba0",
+            measurementId: "G-G31JVSGDSX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- Banner Images ---
+        const bannerImages = [
+            "https://i.postimg.cc/59S05WwS/Picsart-25-07-02-20-40-02-797.jpg",
+            "https://i.postimg.cc/59S05WwS/Picsart-25-07-02-20-40-02-797.jpg",
+            "https://i.postimg.cc/59S05WwS/Picsart-25-07-02-20-40-02-797.jpg",
+        ];
+        let currentBannerIndex = 0;
+        const bannerSlider = document.getElementById("bannerSlider");
+
+        function changeBanner() {
+            if (bannerImages.length === 0) return;
+            bannerSlider.style.backgroundImage = `url('${bannerImages[currentBannerIndex]}')`;
+            currentBannerIndex = (currentBannerIndex + 1) % bannerImages.length;
+        }
+
+        class AppManager {
+            constructor() {
+                this.authMode = "login";
+                this.currentUser = null;
+                this.userCoins = 0;
+                this.adminEmail = "java88449@gmail.com";
+                this.initDomElements();
+                this.initEventListeners();
+                this.initFirebaseAuth();
+            }
+            
+            initDomElements() {
+                // Auth
+                this.authContainer = document.getElementById("authContainer");
+                this.authForm = document.getElementById("authForm");
+                this.emailInput = document.getElementById("emailInput");
+                this.passwordInput = document.getElementById("passwordInput");
+                this.authTitle = document.getElementById("authTitle");
+                this.authButton = document.getElementById("authButton");
+                this.toggleAuthModeBtn = document.getElementById("toggleAuthMode");
+                this.authMessage = document.getElementById("authMessage");
+
+                // Main App
+                this.appContainer = document.getElementById("appContainer");
+                this.userEmailDisplay = document.getElementById("userEmailDisplay");
+                this.walletBalanceDisplay = document.querySelector("#walletBalance span");
+                this.copyEmailBtn = document.getElementById("copyEmailBtn");
+                this.logoutBtn = document.getElementById("logoutBtn");
+                
+                // Sidebar
+                this.sidebar = document.getElementById("sidebar");
+                this.menuBtn = document.getElementById("menuBtn");
+                this.sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
+                this.overlay = document.getElementById("overlay");
+                
+                // Wallet
+                this.depositBtn = document.getElementById("deposit-btn");
+                this.withdrawBtn = document.getElementById("withdraw-btn");
+                
+                // Withdraw Modal
+                this.withdrawModal = document.getElementById("withdrawModal");
+                this.withdrawForm = document.getElementById("withdrawForm");
+                this.withdrawAmount = document.getElementById("withdrawAmount");
+                this.withdrawMethod = document.getElementById("withdrawMethod");
+                this.vodafoneInput = document.getElementById("vodafoneInput");
+                this.paypalInput = document.getElementById("paypalInput");
+                this.closeWithdrawModalBtn = document.getElementById("closeWithdrawModalBtn");
+                this.withdrawModalBalance = document.getElementById("withdrawModalBalance");
+                
+                // Admin
+                this.adminBtn = document.getElementById("admin-btn");
+                this.adminModal = document.getElementById("adminModal");
+                this.adminForm = document.getElementById("adminForm");
+                this.closeAdminModalBtn = document.getElementById("closeAdminModalBtn");
+            }
+
+            initEventListeners() {
+                this.authForm.addEventListener("submit", e => { e.preventDefault(); this.handleAuth(); });
+                this.toggleAuthModeBtn.addEventListener("click", e => { e.preventDefault(); this.toggleAuthMode(); });
+                this.logoutBtn.addEventListener("click", () => this.logout());
+                this.copyEmailBtn.addEventListener("click", () => this.copyToClipboard(this.currentUser.email, "تم نسخ البريد الإلكتروني!"));
+                this.menuBtn.addEventListener("click", () => this.openSidebar());
+                this.sidebarCloseBtn.addEventListener("click", () => this.closeSidebar());
+                this.overlay.addEventListener("click", () => this.closeSidebar());
+                this.depositBtn.addEventListener("click", () => this.showDepositInfo());
+                this.withdrawBtn.addEventListener("click", () => this.showWithdrawModal());
+                this.closeWithdrawModalBtn.addEventListener("click", () => this.closeModal(this.withdrawModal));
+                this.withdrawMethod.addEventListener("change", () => this.toggleWithdrawInputs());
+                this.withdrawForm.addEventListener("submit", e => { e.preventDefault(); this.handleWithdrawalRequest(); });
+                
+                // Admin Listeners
+                this.adminBtn.addEventListener("click", () => this.openModal(this.adminModal));
+                this.closeAdminModalBtn.addEventListener("click", () => this.closeModal(this.adminModal));
+                this.adminForm.addEventListener("submit", e => { e.preventDefault(); this.handleAdminTopupRequest(); });
+            }
+
+            initFirebaseAuth() {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        this.currentUser = user;
+                        await this.fetchUserData();
+                        this.showApp();
+                    } else {
+                        this.currentUser = null;
+                        this.showAuth();
+                    }
+                });
+            }
+            
+            async fetchUserData() {
+                const userDocRef = doc(db, "users", this.currentUser.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    this.userCoins = userDocSnap.data().coins || 0;
+                } else {
+                    // Create a document for new users
+                    await setDoc(userDocRef, { email: this.currentUser.email, coins: 0 });
+                    this.userCoins = 0;
+                }
+                this.updateBalanceDisplay();
+            }
+            
+            updateBalanceDisplay() {
+                this.walletBalanceDisplay.textContent = this.userCoins;
+            }
+            
+            showApp() {
+                this.authContainer.classList.add("hidden");
+                this.appContainer.classList.remove("hidden");
+                this.userEmailDisplay.textContent = this.currentUser.email;
+                
+                // Show admin button if user is the admin
+                if (this.currentUser.email === this.adminEmail) {
+                    this.adminBtn.classList.remove("hidden");
+                } else {
+                    this.adminBtn.classList.add("hidden");
+                }
+                
+                changeBanner();
+                this.bannerInterval = setInterval(changeBanner, 3000);
+            }
+
+            showAuth() {
+                this.authContainer.classList.remove("hidden");
+                this.appContainer.classList.add("hidden");
+                clearInterval(this.bannerInterval);
+            }
+            
+            openSidebar() { this.sidebar.classList.add("is-open"); this.overlay.classList.add("is-visible"); }
+            closeSidebar() { this.sidebar.classList.remove("is-open"); this.overlay.classList.remove("is-visible"); }
+            openModal(modal) { modal.classList.add("is-visible"); }
+            closeModal(modal) { modal.classList.remove("is-visible"); }
+            
+            showDepositInfo() {
+                alert("لشحن حسابك، يرجى التواصل مع الإدارة عبر واتساب من الرابط أسفل الصفحة.");
+            }
+            
+            showWithdrawModal() {
+                this.withdrawModalBalance.textContent = this.userCoins;
+                this.withdrawForm.reset();
+                this.toggleWithdrawInputs();
+                this.openModal(this.withdrawModal);
+            }
+            
+            toggleWithdrawInputs() {
+                const selectedMethod = this.withdrawMethod.value;
+                this.vodafoneInput.classList.add("hidden");
+                this.paypalInput.classList.add("hidden");
+                
+                if (selectedMethod === 'vodafone') {
+                    this.vodafoneInput.classList.remove("hidden");
+                } else if (selectedMethod === 'paypal') {
+                    this.paypalInput.classList.remove("hidden");
+                }
+            }
+            
+            handleWithdrawalRequest() {
+                const amount = parseInt(this.withdrawAmount.value, 10);
+                const method = this.withdrawMethod.value;
+                
+                if (isNaN(amount) || amount <= 0) {
+                    alert("الرجاء إدخال مبلغ صحيح للسحب.");
+                    return;
+                }
+                if (amount > this.userCoins) {
+                    alert("المبلغ المطلوب أكبر من رصيدك الحالي.");
+                    return;
+                }
+                if (!method) {
+                    alert("الرجاء اختيار طريقة السحب.");
+                    return;
+                }
+                
+                let paymentInfo = "";
+                if (method === 'vodafone') {
+                    paymentInfo = this.vodafoneInput.value.trim();
+                } else if (method === 'paypal') {
+                    paymentInfo = this.paypalInput.value.trim();
+                }
+
+                if (!paymentInfo) {
+                    alert("الرجاء إدخال بيانات السحب (رقم الهاتف أو البريد الإلكتروني).");
+                    return;
+                }
+
+                const subject = `طلب سحب أرباح جديد من ${this.currentUser.email}`;
+                const body = `
+                    طلب سحب جديد من المستخدم: ${this.currentUser.email}
+                    -----------------------------------
+                    المبلغ: ${amount} عملة
+                    طريقة السحب: ${method}
+                    بيانات الحساب: ${paymentInfo}
+                    -----------------------------------
+                    الرصيد الحالي للمستخدم قبل السحب: ${this.userCoins} عملة
+                `;
+
+                // Use mailto to open user's email client
+                window.location.href = `mailto:${this.adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+                alert("تم إرسال طلب السحب بنجاح. سيتم التواصل معك قريباً.");
+                this.closeModal(this.withdrawModal);
+            }
+
+            handleAdminTopupRequest() {
+                const targetEmail = document.getElementById("adminTargetEmail").value.trim();
+                const amount = document.getElementById("adminAmount").value;
+
+                if (!targetEmail || !amount || amount <= 0) {
+                    alert("الرجاء إدخال بريد إلكتروني صالح وكمية أكبر من صفر.");
+                    return;
+                }
+
+                const subject = `طلب شحن رصيد للمستخدم: ${targetEmail}`;
+                const body = `
+                    يرجى تنفيذ عملية الشحن التالية:
+                    -----------------------------------
+                    شحن حساب المستخدم: ${targetEmail}
+                    المبلغ: ${amount} عملة
+                    -----------------------------------
+                    تم إرسال هذا الطلب من لوحة تحكم الوكيل.
+                `;
+
+                window.location.href = `mailto:${this.adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                
+                alert("تم إرسال طلب الشحن إلى بريدك الإلكتروني لتنفيذه.");
+                this.closeModal(this.adminModal);
+                this.adminForm.reset();
+            }
+
+
+            async handleAuth() {
+                const email = this.emailInput.value;
+                const password = this.passwordInput.value;
+                this.authMessage.textContent = "";
+                
+                try {
+                    if (this.authMode === "login") {
+                        await signInWithEmailAndPassword(auth, email, password);
+                    } else {
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        // The onAuthStateChanged listener handles showing the app and fetching data
+                    }
+                } catch (error) {
+                    this.authMessage.textContent = this.getAuthErrorMessage(error.code);
+                }
+            }
+            
+            toggleAuthMode() {
+                this.authMode = (this.authMode === "login") ? "signup" : "login";
+                if (this.authMode === 'signup') {
+                    this.authTitle.textContent = "إنشاء حساب";
+                    this.authButton.textContent = "إنشاء حساب";
+                    document.getElementById("authToggle").innerHTML = 'لديك حساب بالفعل؟ <a href="#" id="toggleAuthMode">تسجيل الدخول</a>';
+                } else {
+                    this.authTitle.textContent = "تسجيل الدخول";
+                    this.authButton.textContent = "تسجيل الدخول";
+                    document.getElementById("authToggle").innerHTML = 'ليس لديك حساب؟ <a href="#" id="toggleAuthMode">إنشاء حساب</a>';
+                }
+                document.getElementById("toggleAuthMode").addEventListener("click", e => { e.preventDefault(); this.toggleAuthMode(); });
+                this.authMessage.textContent = "";
+            }
+
+            getAuthErrorMessage(errorCode) {
+                switch (errorCode) {
+                    case "auth/invalid-email": return "البريد الإلكتروني غير صالح.";
+                    case "auth/user-not-found": return "الحساب غير موجود.";
+                    case "auth/wrong-password": return "كلمة المرور خاطئة.";
+                    case "auth/email-already-in-use": return "هذا البريد مستخدم بالفعل.";
+                    case "auth/weak-password": return "كلمة المرور يجب أن تكون 6 أحرف على الأقل.";
+                    default: return "حدث خطأ. يرجى المحاولة مرة أخرى.";
+                }
+            }
+
+            async logout() {
+                await signOut(auth);
+                this.closeSidebar();
+            }
+            
+            copyToClipboard(text, alertMessage) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(alertMessage);
+                }).catch(err => {
+                    console.error("Failed to copy: ", err);
+                    alert("فشل النسخ.");
+                });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            new AppManager();
+        });
+    </script>
+</body>
+</html>
