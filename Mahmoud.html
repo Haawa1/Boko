@@ -1,1 +1,616 @@
-Thank you for using TrebEdit.
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الفواكه - Boko</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap");
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Cairo", sans-serif;
+            background: #f0f2f5; /* لون خلفية أفتح وأنعم */
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Header Banner */
+        .header-banner {
+            background: #dc143c; /* لون أحمر ثابت وأنيق */
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .banner-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .banner-title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 700; /* خط أعرض قليلاً */
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        /* Game Container */
+        .game-container {
+            max-width: 700px; /* حجم أصغر للتركيز */
+            margin: 40px auto;
+            padding: 30px 20px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        
+        /* Slot Machine */
+        .slot-machine {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 3px solid #dc143c;
+        }
+        
+        .reels-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .reel {
+            background: #ffffff;
+            border-radius: 15px;
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .fruit {
+            font-size: clamp(2rem, 6vw, 3rem);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+        
+        .fruit.winning {
+            animation: winPulse 0.8s ease-in-out infinite alternate;
+            transform: scale(1.2);
+        }
+        
+        @keyframes winPulse {
+            from { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)); }
+            to { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); }
+        }
+        
+        .reel.spinning .fruit {
+            animation: spin 0.1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+        
+        .win-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            box-shadow: 0 0 20px #FFD700;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .win-line.show {
+            opacity: 1;
+        }
+        
+        /* Bet Section */
+        .bet-section {
+            margin: 25px 0;
+        }
+        
+        .bet-title {
+            color: #333;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .bet-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        
+        .bet-button {
+            padding: 15px 25px;
+            border: 2px solid #dc143c;
+            background: #ffffff;
+            color: #dc143c;
+            border-radius: 12px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Cairo", sans-serif;
+            min-width: 120px; /* زيادة عرض الأزرار */
+        }
+        
+        .bet-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.2);
+        }
+        
+        .bet-button.active {
+            background: #dc143c;
+            color: white;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+        }
+        
+        /* Spin Button */
+        .spin-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #dc143c, #b22222);
+            border: 4px solid #ffffff;
+            color: white;
+            font-size: 2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 30px rgba(220, 20, 60, 0.3);
+            font-family: "Cairo", sans-serif;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .spin-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(220, 20, 60, 0.5);
+        }
+        
+        .spin-button:active {
+            transform: scale(0.95);
+        }
+        
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .spinning-icon {
+            display: none;
+            animation: rotate 1s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Message */
+        .message {
+            color: #dc143c;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 600;
+            margin: 20px 0;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .message.win {
+            color: #28a745;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .game-container {
+                margin: 20px auto;
+                padding: 20px 15px;
+            }
+            .reel { height: 150px; }
+            .spin-button { width: 120px; height: 120px; font-size: 1.5rem; }
+            .banner-content { flex-direction: column; gap: 15px; }
+        }
+        
+        @media (max-width: 480px) {
+            .reel { height: 120px; }
+            .fruit { font-size: 1.8rem; }
+            .spin-button { width: 100px; height: 100px; font-size: 1.2rem; }
+            .bet-button { padding: 10px 15px; min-width: 90px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-banner">
+        <div class="banner-content">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+                <span>العودة</span>
+            </a>
+            <h1 class="banner-title">🎮 لعبة الفواكه</h1>
+            <div class="user-info" id="userInfo">
+                <i class="fas fa-user"></i>
+                <span id="userEmail">مرحباً بك</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="message" id="message">
+            <i class="fas fa-info-circle"></i>
+            <span>اختر الرهان وابدأ اللعب!</span>
+        </div>
+        
+        <div class="slot-machine">
+            <div class="reels-container" id="reels">
+                <div class="reel"><div class="fruit">🍎</div><div class="fruit">🍊</div><div class="fruit">🍉</div></div>
+                <div class="reel"><div class="fruit">🍏</div><div class="fruit">🥭</div><div class="fruit">🍓</div></div>
+                <div class="reel"><div class="fruit">🍍</div><div class="fruit">🍋</div><div class="fruit">🍑</div></div>
+                <div class="reel"><div class="fruit">🍅</div><div class="fruit">🍉</div><div class="fruit">🍍</div></div>
+            </div>
+            <div class="win-line" id="winLine1" style="top: 25%;"></div>
+            <div class="win-line" id="winLine2" style="top: 50%;"></div>
+            <div class="win-line" id="winLine3" style="top: 75%;"></div>
+        </div>
+        
+        <div class="bet-section">
+            <div class="bet-title">💰 الرهان</div>
+            <div class="bet-buttons">
+                <button class="bet-button active" data-bet="100">100</button>
+                <button class="bet-button" data-bet="500">500</button>
+                <button class="bet-button" data-bet="2000">2000</button>
+                <button class="bet-button" data-bet="10000">10000</button>
+            </div>
+        </div>
+        
+        <button class="spin-button" id="spinBtn">
+            <span class="text" id="spinText">دوّر</span>
+            <span class="spinning-icon" id="spinIcon">⟳</span>
+        </button>
+    </div>
+
+    <audio id="backgroundMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    <audio id="spinSound"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+    <audio id="winSound"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"></audio>
+
+    <script type="module">
+        // Import Firebase modules (NO CHANGES HERE)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // Firebase configuration (NO CHANGES HERE)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDs-NPuHrga2A-4dICNYkySLVnm3awHn9A",
+            authDomain: "bright-2004b.firebaseapp.com",
+            databaseURL: "https://bright-2004b-default-rtdb.firebaseio.com",
+            projectId: "bright-2004b",
+            storageBucket: "bright-2004b.firebasestorage.app",
+            messagingSenderId: "341104123105",
+            appId: "1:341104123105:web:83ba2d3d0e409a821e6ba0",
+            measurementId: "G-G31JVSGDSX"
+        };
+
+        // Initialize Firebase (NO CHANGES HERE)
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        class FruitSlotGame {
+            constructor() {
+                // *** CHANGED: Default bet is now 100 ***
+                this.currentBet = 100; 
+                this.isSpinning = false;
+                this.currentUser = null;
+                this.userBalance = 0;
+                this.fruits = ["🍎", "🍏", "🥭", "🍍", "🍋", "🍊", "🍉", "🍑", "🍓", "💎"]; // أضفت جوهرة لزيادة الإثارة
+                this.musicStarted = false;
+                
+                // *** CHANGED: multipliers for winnings ***
+                this.winMultipliers = {
+                    3: 2,  // 3 matches = 2x bet
+                    4: 5   // 4 matches = 5x bet
+                };
+
+                this.elements = {
+                    userEmail: document.getElementById("userEmail"),
+                    message: document.getElementById("message"),
+                    reels: document.querySelectorAll(".reel"),
+                    spinBtn: document.getElementById("spinBtn"),
+                    spinText: document.getElementById("spinText"),
+                    spinIcon: document.getElementById("spinIcon"),
+                    betButtons: document.querySelectorAll(".bet-button"),
+                    winLines: [
+                        document.getElementById("winLine1"),
+                        document.getElementById("winLine2"),
+                        document.getElementById("winLine3")
+                    ],
+                    backgroundMusic: document.getElementById("backgroundMusic"),
+                    spinSound: document.getElementById("spinSound"),
+                    winSound: document.getElementById("winSound")
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.randomizeReels();
+                this.setupFirebaseAuth();
+            }
+            
+            setupEventListeners() {
+                this.elements.spinBtn.addEventListener("click", () => this.spin());
+                
+                this.elements.betButtons.forEach(btn => {
+                    btn.addEventListener("click", (e) => {
+                        if (this.isSpinning) return;
+                        this.currentBet = parseInt(e.target.dataset.bet);
+                        this.updateBetButtons();
+                        this.updateMessage("جاهز للعب!", "info");
+                    });
+                });
+
+                document.addEventListener("click", () => {
+                    if (!this.musicStarted) {
+                        this.elements.backgroundMusic.play().catch(e => {});
+                        this.musicStarted = true;
+                    }
+                }, { once: true });
+            }
+
+            // --- ALL FIREBASE/USER FUNCTIONS REMAIN UNCHANGED ---
+            setupFirebaseAuth() {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        this.currentUser = user;
+                        this.elements.userEmail.textContent = user.email;
+                        this.loadUserData(user.uid);
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                });
+            }
+
+            async loadUserData(uid) {
+                try {
+                    const userDocRef = doc(db, "users", uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        this.userBalance = userDocSnap.data().coins || 0;
+                    }
+                } catch (error) {
+                    console.error("Error loading user data:", error);
+                }
+            }
+
+            async updateUserData() {
+                if (this.currentUser) {
+                    try {
+                        const userDocRef = doc(db, "users", this.currentUser.uid);
+                        await updateDoc(userDocRef, { coins: this.userBalance });
+                    } catch (error) {
+                        console.error("Error updating user data:", error);
+                    }
+                }
+            }
+            
+            updateMessage(msg, type = "info") {
+                const messageElement = this.elements.message;
+                const iconElement = messageElement.querySelector("i");
+                messageElement.querySelector("span").textContent = msg;
+                messageElement.className = `message ${type}`;
+                
+                iconElement.className = {
+                    win: "fas fa-trophy",
+                    lose: "fas fa-times-circle",
+                    info: "fas fa-info-circle"
+                }[type] || "fas fa-info-circle";
+            }
+            
+            updateBetButtons() {
+                this.elements.betButtons.forEach(btn => {
+                    btn.classList.toggle("active", parseInt(btn.dataset.bet) === this.currentBet);
+                });
+            }
+            
+            randomizeReels() {
+                this.elements.reels.forEach(reel => {
+                    reel.querySelectorAll(".fruit").forEach(fruit => {
+                        fruit.textContent = this.getRandomFruit();
+                    });
+                });
+            }
+            
+            getRandomFruit() {
+                return this.fruits[Math.floor(Math.random() * this.fruits.length)];
+            }
+            
+            async spin() {
+                if (this.isSpinning) return;
+                if (this.userBalance < this.currentBet) {
+                    this.updateMessage("رصيدك غير كافي للرهان!", "lose");
+                    return;
+                }
+                
+                this.isSpinning = true;
+                this.userBalance -= this.currentBet;
+                this.updateMessage("البكر يدور...", "info");
+                this.hideWinLines();
+                this.elements.spinSound.play().catch(e => {});
+                
+                this.elements.spinBtn.disabled = true;
+                this.elements.spinText.style.display = "none";
+                this.elements.spinIcon.style.display = "inline";
+                this.elements.reels.forEach(reel => reel.classList.add("spinning"));
+                
+                await this.delay(2500);
+                
+                this.elements.reels.forEach(reel => reel.classList.remove("spinning"));
+                
+                const results = this.generateResults();
+                this.displayResults(results);
+                
+                const winInfo = this.checkWin(results);
+                this.handleWinResult(winInfo);
+                
+                this.elements.spinBtn.disabled = false;
+                this.elements.spinText.style.display = "inline";
+                this.elements.spinIcon.style.display = "none";
+                
+                this.isSpinning = false;
+                this.updateUserData();
+            }
+            
+            // *** CHANGED: Simplified result generation ***
+            generateResults() {
+                const results = [];
+                for (let i = 0; i < 4; i++) {
+                    results.push([this.getRandomFruit(), this.getRandomFruit(), this.getRandomFruit()]);
+                }
+                return results;
+            }
+            
+            displayResults(results) {
+                this.elements.reels.forEach((reel, index) => {
+                    reel.querySelectorAll(".fruit").forEach((fruit, fruitIndex) => {
+                        fruit.textContent = results[index][fruitIndex];
+                        fruit.classList.remove("winning");
+                    });
+                });
+            }
+            
+            // *** CHANGED: New win checking logic with multipliers ***
+            checkWin(results) {
+                const winInfo = { hasWin: false, winningRows: [], totalWin: 0 };
+                const rows = [
+                    results.map(reel => reel[0]), // Top row
+                    results.map(reel => reel[1]), // Middle row
+                    results.map(reel => reel[2])  // Bottom row
+                ];
+
+                rows.forEach((row, rowIndex) => {
+                    const counts = row.reduce((acc, fruit) => {
+                        acc[fruit] = (acc[fruit] || 0) + 1;
+                        return acc;
+                    }, {});
+
+                    Object.values(counts).forEach(count => {
+                        if (count >= 3) {
+                            winInfo.hasWin = true;
+                            if (!winInfo.winningRows.includes(rowIndex)) {
+                                winInfo.winningRows.push(rowIndex);
+                            }
+                            winInfo.totalWin += this.currentBet * (this.winMultipliers[count] || 1);
+                        }
+                    });
+                });
+                
+                return winInfo;
+            }
+            
+            // *** CHANGED: Simplified win handling ***
+            handleWinResult(winInfo) {
+                if (winInfo.hasWin && winInfo.totalWin > 0) {
+                    this.userBalance += winInfo.totalWin;
+                    this.showWinEffects(winInfo);
+                    this.elements.winSound.play().catch(e => {});
+                    this.updateMessage(`🎉 رائع! لقد ربحت ${winInfo.totalWin} نقطة!`, "win");
+                } else {
+                    this.updateMessage("حظ أوفر في المرة القادمة!", "lose");
+                }
+            }
+            
+            showWinEffects(winInfo) {
+                winInfo.winningRows.forEach(rowIndex => {
+                    this.elements.winLines[rowIndex].classList.add("show");
+                    this.elements.reels.forEach(reel => {
+                        reel.children[rowIndex].classList.add("winning");
+                    });
+                });
+                
+                setTimeout(() => {
+                    this.hideWinLines();
+                    this.elements.reels.forEach(reel => {
+                        reel.querySelectorAll(".fruit.winning").forEach(fruit => {
+                            fruit.classList.remove("winning");
+                        });
+                    });
+                }, 3000);
+            }
+            
+            hideWinLines() {
+                this.elements.winLines.forEach(line => line.classList.remove("show"));
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            new FruitSlotGame();
+        });
+    </script>
+</body>
+</html>
